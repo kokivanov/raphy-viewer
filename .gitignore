@@ -2,9 +2,11 @@ build/bin
 node_modules
 frontend/dist
 frontend/src/lib/wailsjs
-
-cache
 data
-.vscode
 build
+cache
+!internals/core/cache
+!bindings/data
+
+.vscode
 .DS_store

@@ -1,0 +1,191 @@
+package cache
+
+import (
+	"database/sql"
+	"fmt"
+	"os"
+	"path"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/uptrace/bun"
+)
+
+type RequestType string
+
+type RequestOptions interface {
+}
+
+const (
+	Insert RequestType = "INSERT"
+	Delete RequestType = "DELETE"
+	Select RequestType = "SELECT"
+)
+
+func (cm *CacheManager) AddMetaData(contentId, data string) {
+
+}
+
+func (cm *CacheManager) GetMetaData() {
+
+}
+
+func (cm *CacheManager) RemoveMetaData() {
+
+}
+
+func (cm *CacheManager) AddImageData(hash string, contentId *int64, size int64) error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	reqTime := time.Now().Unix()
+	expTime := time.Now().Add(cm.cacheLifetime).Unix()
+
+	var err error
+
+	data := ImageData{
+		ContentID: contentId,
+		Hash:      hash,
+		CreatedAt: reqTime,
+		ExpiresAt: expTime,
+		Size:      size,
+	}
+
+	_, err = cm.db.NewInsert().Model(&data).Exec(cm.ctx)
+	return err
+}
+
+func (cm *CacheManager) GetImageData(hash string) (*ImageData, error) {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	var imgData ImageData
+
+	err := cm.db.NewSelect().Model(&imgData).Where("hash = ", hash).Scan(cm.ctx)
+
+	if err == nil {
+		return &imgData, nil
+	} else {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+}
+
+func (cm *CacheManager) GetImagesData(hashes []string) ([]ImageData, error) {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	var (
+		imagesData []ImageData
+		err        error
+	)
+
+	if len(hashes) > 0 {
+		err = cm.db.NewSelect().Model(&imagesData).Where("hash IN (?)", bun.In(hashes)).Scan(cm.ctx)
+	} else {
+		err = cm.db.NewSelect().Model(&imagesData).Order("expiresAt ASC").Limit(100).Scan(cm.ctx)
+	}
+
+	if err != nil {
+		cm.lg.Error(err.Error())
+		return nil, err
+	}
+
+	return imagesData, nil
+}
+
+func (cm *CacheManager) RemoveImageData(hash string) error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	_, err := cm.db.NewDelete().Model((*ImageData)(nil)).Where("hash = ?", hash).Exec(cm.ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cm *CacheManager) RemoveImagesData(hashes []string) error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	_, err := cm.db.NewDelete().Model((*ImageData)(nil)).Where("hash IN (?)", bun.In(hashes)).Exec(cm.ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cm *CacheManager) PurgeImageData() error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	_, err := cm.db.NewDelete().Model((*ImageData)(nil)).Exec(cm.ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cm *CacheManager) GetCacheSize() (int64, error) {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	res := cm.db.QueryRow(CACHE_SIZE_REQUEST)
+	var size int64
+
+	err := res.Scan(&size)
+
+	if err != nil {
+		if strings.Contains(err.Error(), "converting NULL to int64") {
+			return 0, nil
+		} else {
+			return 0, err
+		}
+	}
+
+	return size, nil
+}
+
+func (cm *CacheManager) addImageCache(fileHash string, contentId string, size int64) error {
+	cacheSize, err := cm.GetCacheSize()
+	if err != nil {
+		return err
+	}
+
+	cd, err := (strconv.Atoi(contentId))
+
+	contId := int64(cd)
+
+	if err == nil {
+		cm.AddImageData(fileHash, &contId, size)
+	} else {
+		cm.AddImageData(fileHash, nil, size)
+	}
+
+	if cacheSize > cm.imageCacheMaxSize {
+		data, err := cm.GetImagesData([]string{})
+		if err != nil {
+			return err
+		}
+
+		datum, hashes := elemsToDelete(data, cacheSize-cm.imageCacheMaxSize)
+
+		cm.RemoveImagesData(hashes)
+
+		for i, img := range datum {
+			if img.ContentID != nil {
+				os.Remove(path.Join(cm.imgDir, fmt.Sprintf("%v", *(datum[i].ContentID)), img.Hash))
+			}
+		}
+	}
+
+	return nil
+}
