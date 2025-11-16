@@ -74,7 +74,7 @@
 		<LetsIconsCloseRound
 			class={`size-10 cursor-pointer p-2 transition-[opacity] delay-150 duration-200 ${showSearch ? 'opacity-100' : 'opacity-0'}`}
 		></LetsIconsCloseRound>
-		<Tooltip>$_('navbar.search.clear_tooltip')</Tooltip>
+		<Tooltip>{$_('navbar.search.clear_tooltip')}</Tooltip>
 	</button>
 	<button onclick={handleSearchClick} class={`absolute left-0 cursor-pointer rounded-3xl `}>
 		<LetsIconsSearchAlt

@@ -1,12 +1,14 @@
 <script lang="ts">
 	import type { core } from '$lib/wailsjs/go/models';
-	import { ImagePlaceholder, Img, P, span } from 'flowbite-svelte';
+	import { ImagePlaceholder, Img, P, span, Tooltip } from 'flowbite-svelte';
 	import { _ } from 'svelte-i18n';
 
 	import TablerClockFilled from '~icons/tabler/clock-filled';
 	import TablerClock from '~icons/tabler/clock';
 	import TablerHeartFilled from '~icons/tabler/heart-filled';
 	import TablerHeart from '~icons/tabler/heart';
+	import TablerStarFilled from '~icons/tabler/star-filled';
+
 	import { AddFavorite, RemoveFavorite } from '$lib/wailsjs/go/data/DataService';
 	import { fade } from 'svelte/transition';
 	import { gsap } from 'gsap';
@@ -67,35 +69,42 @@
 		}
 	})}
 >
+	<div class="absolute bg-{statusColor}-500 rounded-br-md">
+		<p class=" px-2 font-semibold text-white">{$_(status)}</p>
+	</div>
 	<div
 		class="tile absolute h-full w-full items-center p-3 opacity-0 transition-opacity hover:opacity-100"
 	>
-		<p
-			class="tile-title m-auto h-full w-full content-center overflow-ellipsis text-center font-semibold text-white"
-		>
-			{content.title.userPreferred ?? content.title.english ?? content.title.native}
-		</p>
+		<div class="m-auto flex h-full w-full flex-col content-center items-center justify-center">
+			<p class="tile-title overflow-ellipsis text-center font-semibold text-white">
+				{content.title.userPreferred ?? content.title.english ?? content.title.native}
+			</p>
+			<p class="flex items-center font-semibold text-white">
+				{content.averageScore / 10}<TablerStarFilled class="ml-1 text-yellow-400"
+				></TablerStarFilled>
+			</p>
+		</div>
 		<!-- svelte-ignore a11y_consider_explicit_label -->
 
 		<button id="heart" class="absolute right-2 top-1 cursor-pointer" onclick={handleFavClick}>
 			{#if isFav}
-				<div>
-					<TablerHeartFilled class="text-red-400 hover:text-red-400"></TablerHeartFilled>
-				</div>
+				<TablerHeartFilled class="text-red-400 hover:text-red-400"></TablerHeartFilled>
+				<Tooltip>
+					{$_('general.tile.unfavorite')}
+				</Tooltip>
 			{:else}
-				<div>
-					<TablerHeart class="text-white hover:text-red-400"></TablerHeart>
-				</div>
+				<TablerHeart class="text-white hover:text-red-400"></TablerHeart>
+				<Tooltip>
+					{$_('general.tile.favorite')}
+				</Tooltip>
 			{/if}
 		</button>
 	</div>
 
-	<div class="absolute bg-{statusColor}-400 rounded-br-md">
-		<p class=" px-2 font-semibold text-white">{$_(status)}</p>
-	</div>
 	{#if !isReady}
 		<ImagePlaceholder class="aspect-[4/6] w-1/5 xl:w-[15%]" imgOnly></ImagePlaceholder>
 	{/if}
+
 	<Img
 		class="aspect-auto h-full w-full object-cover"
 		src={`/local/img?id=${content.idMal}&u=${content.coverImage.large ?? content.coverImage.extraLarge ?? content.coverImage.medium}`}

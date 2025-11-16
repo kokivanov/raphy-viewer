@@ -30,12 +30,13 @@ type ShortPage struct {
 }
 
 type ShortMedia struct {
-	IDMal      int64      `json:"idMal"`
-	Title      Title      `json:"title"`
-	Status     Status     `json:"status"`
-	IsAdult    bool       `json:"isAdult"`
-	CoverImage CoverImage `json:"coverImage"`
-	Rankings   []Ranking  `json:"rankings"`
+	IDMal        int64      `json:"idMal"`
+	Title        Title      `json:"title"`
+	Status       Status     `json:"status"`
+	IsAdult      bool       `json:"isAdult"`
+	CoverImage   CoverImage `json:"coverImage"`
+	Rankings     []Ranking  `json:"rankings"`
+	AverageScore int64      `json:"averageScore"`
 }
 
 type CoverImage struct {

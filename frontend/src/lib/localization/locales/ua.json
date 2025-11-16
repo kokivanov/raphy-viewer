@@ -1,17 +1,36 @@
 {
-	"general": {
-		"loading": "",
-		"tile": {
-			"finished": "Finished",
-			"ongoing": "Ongoing"
-		}
-	},
-	"home": {
-		"message": "Привіт, {name}!"
-	},
-	"navbar": {
-		"search": {
-			"placeholder": "Спробуй щось знайти"
-		}
-	}
+  "explore": {
+    "best_score": "Найвишча оцінка",
+    "latest": "Останні оновлення",
+    "most_loved": "Найулюбленіші",
+    "popular": "Найкраще за весь час",
+    "trending": "Популярне зараз"
+  },
+  "general": {
+    "loading": "Завантаження",
+    "tile": {
+      "aria-label": "Посилання на",
+      "favorite": "Додати до улюбленого",
+      "finished": "Закінченно",
+      "ongoing": "Виходить",
+      "unfavorite": "Прибрати з улюбленого"
+    }
+  },
+  "home": {
+    "message": "Привіт, {name}!"
+  },
+  "navbar": {
+    "close": "Закрити",
+    "home": "Домашня сторінка",
+    "maximise": "Повний екран",
+    "minimise": "Згорнути",
+    "profile_tooltip": "Мій профіль",
+    "search": {
+      "clear_tooltip": "Зтерти",
+      "collapsed_tooltip": "Пошук",
+      "extended_tooltip": "Шукати",
+      "placeholder": "Спробуй щось знайти"
+    },
+    "unmaximise": "Віконний режим"
+  }
 }

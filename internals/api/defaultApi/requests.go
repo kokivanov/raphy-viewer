@@ -13,6 +13,7 @@ const (
 				}
 			status
 			isAdult
+			averageScore
 			coverImage {
 				large
 				extraLarge
@@ -30,6 +31,7 @@ const (
 				context
 				}
 			}
+
 		}
 	}`
 
