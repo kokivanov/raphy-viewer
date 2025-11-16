@@ -1,0 +1,15 @@
+{
+	"general": {
+		"tile": {
+			"aria-label": "Link to {to}"
+		}
+	},
+	"home": {
+		"message": "Hello {name}!"
+	},
+	"navbar": {
+		"search": {
+			"placeholder": "Try searching for something"
+		}
+	}
+}

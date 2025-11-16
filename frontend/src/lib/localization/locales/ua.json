@@ -1,0 +1,17 @@
+{
+	"general": {
+		"loading": "",
+		"tile": {
+			"finished": "Finished",
+			"ongoing": "Ongoing"
+		}
+	},
+	"home": {
+		"message": "Привіт, {name}!"
+	},
+	"navbar": {
+		"search": {
+			"placeholder": "Спробуй щось знайти"
+		}
+	}
+}
