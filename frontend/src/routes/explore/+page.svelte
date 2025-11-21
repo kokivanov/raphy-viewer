@@ -49,46 +49,5 @@
 	}
 </script>
 
-{#snippet cat(
-	title: string,
-	cn: Promise<
-		(core.ShortMedia & {
-			isFav: boolean;
-		})[]
-	>
-)}
-	<section>
-		<Heading tag="h3">{title}</Heading>
-		<article class="h-96">
-			{#await cn}
-				<div class="flex h-full w-full flex-row items-center justify-center">
-					<Spinner size="12"></Spinner>
-					<Heading tag="h3">{$_('general.loading')}</Heading>
-				</div>
-			{:then r}
-				<div class="custom-scroll flex w-dvw gap-5 overflow-x-scroll p-7">
-					{#if r}
-						{#each r as tile}
-							<Tile content={tile}></Tile>
-						{/each}
-					{/if}
-				</div>
-			{/await}
-		</article>
-	</section>
-{/snippet}
-
-<div>
-	{@render cat($_('explore.trending'), trending)}
-
-	{@render cat($_('explore.popular'), popular)}
-
-	{@render cat($_('explore.latest'), latest)}
-
-	{@render cat($_('explore.best_score'), bestScore)}
-
-	{@render cat($_('explore.most_loved'), mostLoved)}
-</div>
-
 <style>
 </style>

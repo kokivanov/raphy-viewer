@@ -21,14 +21,15 @@
 </svelte:head>
 
 <NavBar></NavBar>
-<main class="overflow-y-scroll bg-gray-100">
+<main class="bg-background overflow-y-scroll">
 	{@render children?.()}
 </main>
 
 <style>
 	main {
-		height: calc(100vh - var(--spacing) * 14);
-		overflow-y: scroll;
+		height: calc(100vh - var(--spacing) * 20.5);
+		width: 100vw;
+		overflow-y: auto;
 		overflow-x: hidden;
 	}
 </style>

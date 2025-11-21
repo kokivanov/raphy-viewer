@@ -4,9 +4,7 @@
 			"aria-label": "Link to {to}"
 		}
 	},
-	"home": {
-		"message": "Hello {name}!"
-	},
+	"home": {},
 	"navbar": {
 		"search": {
 			"placeholder": "Try searching for something"

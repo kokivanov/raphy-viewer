@@ -1,10 +1,10 @@
 {
   "explore": {
-    "best_score": "Найвишча оцінка",
-    "latest": "Останні оновлення",
-    "most_loved": "Найулюбленіші",
-    "popular": "Найкраще за весь час",
-    "trending": "Популярне зараз"
+    "best_score": "",
+    "latest": "",
+    "most_loved": "",
+    "popular": "",
+    "trending": ""
   },
   "general": {
     "loading": "Завантаження",
@@ -17,13 +17,14 @@
     }
   },
   "home": {
-    "message": "Привіт, {name}!"
   },
   "navbar": {
     "close": "Закрити",
-    "home": "Домашня сторінка",
+    "explore": "Огляд",
+    "home": "Головна",
     "maximise": "Повний екран",
     "minimise": "Згорнути",
+    "my": "Збережене",
     "profile_tooltip": "Мій профіль",
     "search": {
       "clear_tooltip": "Зтерти",

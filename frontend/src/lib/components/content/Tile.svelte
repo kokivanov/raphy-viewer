@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { core } from '$lib/wailsjs/go/models';
-	import { ImagePlaceholder, Img, P, span, Tooltip } from 'flowbite-svelte';
+	import { Badge, ImagePlaceholder, Img, P, span, Tooltip } from 'flowbite-svelte';
 	import { _ } from 'svelte-i18n';
 
 	import TablerClockFilled from '~icons/tabler/clock-filled';
@@ -29,7 +29,7 @@
 			: content.status === 'FINISHED'
 				? 'general.tile.finished'
 				: content.status;
-	let statusColor =
+	let statusColor: any =
 		content.status === 'RELEASING' ? 'purple' : content.status === 'FINISHED' ? 'green' : 'red';
 
 	const handleFavClick = async (e: MouseEvent) => {
@@ -60,7 +60,7 @@
 </script>
 
 <a
-	class="relative h-80 w-52 shrink-0 border-4 border-[var(--color-primary-500)]"
+	class="border-4] relative h-80 w-52 shrink-0"
 	href={`/media/${content.idMal}`}
 	role="button"
 	aria-label={$_('general.tile.aria-label', {
@@ -69,14 +69,16 @@
 		}
 	})}
 >
-	<div class="absolute bg-{statusColor}-500 rounded-br-md">
-		<p class=" px-2 font-semibold text-white">{$_(status)}</p>
+	<div class="absolute left-3 top-3">
+		<Badge color={statusColor}>
+			{$_(status)}
+		</Badge>
 	</div>
 	<div
-		class="tile absolute h-full w-full items-center p-3 opacity-0 transition-opacity hover:opacity-100"
+		class="tile absolute h-full w-full items-center rounded-xl p-3 opacity-0 transition-opacity hover:opacity-100"
 	>
 		<div class="m-auto flex h-full w-full flex-col content-center items-center justify-center">
-			<p class="tile-title overflow-ellipsis text-center font-semibold text-white">
+			<p class="tile-title text-center font-semibold text-white">
 				{content.title.userPreferred ?? content.title.english ?? content.title.native}
 			</p>
 			<p class="flex items-center font-semibold text-white">
@@ -106,7 +108,7 @@
 	{/if}
 
 	<Img
-		class="aspect-auto h-full w-full object-cover"
+		class="aspect-auto h-full w-full rounded-xl object-cover"
 		src={`/local/img?id=${content.idMal}&u=${content.coverImage.large ?? content.coverImage.extraLarge ?? content.coverImage.medium}`}
 		onload={handleImageLoad}
 	></Img>

@@ -4,27 +4,40 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-	--color-primary-50: #fff5f2;
-	--color-primary-100: #fff1ee;
-	--color-primary-200: #ffe4de;
-	--color-primary-300: #ffd5cc;
-	--color-primary-400: #ffbcad;
-	--color-primary-500: #fe795d;
-	--color-primary-600: #ef562f;
-	--color-primary-700: #eb4f27;
-	--color-primary-800: #cc4522;
-	--color-primary-900: #a5371b;
+	--color-primary-50: #fdebde;
+	--color-primary-100: #fcd7be;
+	--color-primary-200: #fac49d;
+	--color-primary-300: #f8b07c;
+	--color-primary-400: #f79c5c;
+	--color-primary-500: #f47b25;
+	--color-primary-600: #cf691f;
+	--color-primary-700: #ab561a;
+	--color-primary-800: #864414;
+	--color-primary-900: #62310f;
 
-	--color-secondary-50: #f0f9ff;
-	--color-secondary-100: #e0f2fe;
-	--color-secondary-200: #bae6fd;
-	--color-secondary-300: #7dd3fc;
-	--color-secondary-400: #38bdf8;
-	--color-secondary-500: #0ea5e9;
-	--color-secondary-600: #0284c7;
-	--color-secondary-700: #0369a1;
-	--color-secondary-800: #075985;
-	--color-secondary-900: #0c4a6e;
+	--color-secondary-50: #ffffff;
+	--color-secondary-100: #c0b5d9;
+	--color-secondary-200: #a090c5;
+	--color-secondary-300: #806bb2;
+	--color-secondary-400: #61469f;
+	--color-secondary-500: #2c097f;
+	--color-secondary-600: #25086c;
+	--color-secondary-700: #1f0659;
+	--color-secondary-800: #180546;
+	--color-secondary-900: #120433;
+
+	--color-background: #f6f4f3;
+	--color-text: var(--color-zinc-900);
+	--color-accent: var(--color-primary-500);
+	--color-btn-primary: var(--color-neutral-600);
+	--color-btn-secondary: var(--color-neutral-200);
+	--color-btn-hover: var(--color-primary-300);
+}
+
+@layer theme {
+	.dark {
+		--color-background: var(--color-zinc-900);
+	}
 }
 
 @source "../node_modules/flowbite-svelte/dist";
@@ -37,6 +50,18 @@
 	}
 }
 
-body {
-	background-color: #e17100;
+::selection {
+	background-color: var(--color-primary-300);
+}
+
+.action-button {
+	@apply m-1 flex h-8 w-8 content-center items-center rounded-2xl bg-btn-secondary p-2 font-black text-btn-primary;
+}
+
+#btns-window-actions:hover button:hover {
+	@apply bg-btn-hover text-accent;
+}
+
+#navbar a {
+	@apply ml-2 border-btn-primary font-semibold text-btn-primary transition-all hover:border-accent hover:text-accent;
 }
