@@ -1,9 +1,10 @@
 <script lang="ts">
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import { locale } from 'svelte-i18n';
+	import { _, locale } from 'svelte-i18n';
 	import NavBar from '$lib/components/navbar/AppHeader.svelte';
 	import { LocalSettings } from '$lib/stores/LocalSettings';
+	import { Footer, FooterCopyright, FooterLink, FooterLinkGroup } from 'flowbite-svelte';
 
 	let { children } = $props();
 

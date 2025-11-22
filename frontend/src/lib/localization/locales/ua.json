@@ -9,7 +9,7 @@
   "general": {
     "loading": "Завантаження",
     "tile": {
-      "aria-label": "Посилання на",
+      "aria-label": "Посилання на {to}",
       "favorite": "Додати до улюбленого",
       "finished": "Закінченно",
       "ongoing": "Виходить",

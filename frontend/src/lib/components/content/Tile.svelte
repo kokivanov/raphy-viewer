@@ -60,7 +60,7 @@
 </script>
 
 <a
-	class="border-4] relative h-80 w-52 shrink-0"
+	class="border-4] relative h-60 w-36 shrink-0"
 	href={`/media/${content.idMal}`}
 	role="button"
 	aria-label={$_('general.tile.aria-label', {

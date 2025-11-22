@@ -12,15 +12,11 @@
 	} from 'flowbite-svelte';
 	import SearchBar from './SearchBar.svelte';
 	import {
-		EventsOn,
 		Quit,
-		WindowFullscreen,
-		WindowIsFullscreen,
 		WindowIsMaximised,
 		WindowMaximise,
 		WindowMinimise,
 		WindowToggleMaximise,
-		WindowUnfullscreen,
 		WindowUnmaximise
 	} from '$lib/wailsjs/runtime/runtime';
 	import { GetPlatform } from '$lib/wailsjs/go/main/App';

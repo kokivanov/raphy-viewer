@@ -35,7 +35,7 @@ func (a *App) GetPlatform() string {
 
 func (a *App) GetUserLocalSettings() (LS *LocalSettings) {
 	LS = &LocalSettings{
-		Locale: ptr("ua"),
+		Locale: ptr("en"),
 	}
 
 	return
