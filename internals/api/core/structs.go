@@ -37,6 +37,7 @@ type ShortMedia struct {
 	CoverImage   CoverImage `json:"coverImage"`
 	Rankings     []Ranking  `json:"rankings"`
 	AverageScore int64      `json:"averageScore"`
+	BannerImage  string     `json:"bannerImage"`
 }
 
 type CoverImage struct {

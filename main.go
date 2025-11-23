@@ -44,9 +44,10 @@ func main() {
 
 	// Create application with options
 	err = wails.Run(&options.App{
-		Title:  "raphyviewer",
-		Width:  1024,
-		Height: 768,
+		Title:     "raphyviewer",
+		Width:     1024,
+		Height:    768,
+		Frameless: true,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 			Middleware: func(next http.Handler) http.Handler {
@@ -59,8 +60,7 @@ func main() {
 				})
 			},
 		},
-		BackgroundColour: &options.RGBA{R: 255, G: 113, B: 0, A: 1},
-		OnStartup:        app.startup,
+		OnStartup: app.startup,
 		Bind: []interface{}{
 			app,
 			apiManager,

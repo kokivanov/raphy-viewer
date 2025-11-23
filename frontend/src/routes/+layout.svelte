@@ -1,9 +1,10 @@
 <script lang="ts">
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import { locale } from 'svelte-i18n';
+	import { _, locale } from 'svelte-i18n';
 	import NavBar from '$lib/components/navbar/AppHeader.svelte';
 	import { LocalSettings } from '$lib/stores/LocalSettings';
+	import { Footer, FooterCopyright, FooterLink, FooterLinkGroup } from 'flowbite-svelte';
 
 	let { children } = $props();
 
@@ -21,14 +22,15 @@
 </svelte:head>
 
 <NavBar></NavBar>
-<main class="overflow-y-scroll bg-gray-100">
+<main class="bg-background overflow-y-scroll">
 	{@render children?.()}
 </main>
 
 <style>
 	main {
-		height: calc(100vh - var(--spacing) * 14);
-		overflow-y: scroll;
+		height: calc(100vh - var(--spacing) * 20.5);
+		width: 100vw;
+		overflow-y: auto;
 		overflow-x: hidden;
 	}
 </style>

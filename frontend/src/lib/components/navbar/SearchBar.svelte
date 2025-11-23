@@ -69,7 +69,7 @@
 	};
 </script>
 
-<div class="relative">
+<div class="bg-btn-secondary relative rounded-3xl">
 	<button onclick={handleClearClick} class="absolute right-0">
 		<LetsIconsCloseRound
 			class={`size-10 cursor-pointer p-2 transition-[opacity] delay-150 duration-200 ${showSearch ? 'opacity-100' : 'opacity-0'}`}
@@ -77,10 +77,7 @@
 		<Tooltip>{$_('navbar.search.clear_tooltip')}</Tooltip>
 	</button>
 	<button onclick={handleSearchClick} class={`absolute left-0 cursor-pointer rounded-3xl `}>
-		<LetsIconsSearchAlt
-			color={`${showSearch ? 'black' : 'white'}`}
-			class={`size-10 p-2 transition `}
-			role="link"
+		<LetsIconsSearchAlt color="black" class={`size-10 p-2 transition `} role="link"
 		></LetsIconsSearchAlt>
 		<Tooltip
 			>{showSearch
@@ -89,10 +86,12 @@
 		>
 	</button>
 	<input
-		class={`h-10 rounded-3xl transition-[width,padding,background] duration-300 ease-in-out ${showSearch ? 'w-72 bg-amber-50 px-10' : 'w-10 bg-none px-5'}`}
+		class={`px-5} h-10 w-10 bg-none transition-[width,padding,background] duration-300 ease-in-out`}
+		class:w-72={showSearch}
+		class:px-10={showSearch}
 		bind:this={searchInput}
 		bind:value={searchrequest}
-		placeholder={$_('navbar.search.placeholder')}
+		placeholder={showSearch ? $_('navbar.search.placeholder') : ''}
 		aria-label="search"
 		onblur={handleBlur}
 		oninput={handleSearch}

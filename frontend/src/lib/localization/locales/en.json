@@ -1,15 +1,27 @@
 {
-	"general": {
-		"tile": {
-			"aria-label": "Link to {to}"
-		}
-	},
-	"home": {
-		"message": "Hello {name}!"
-	},
-	"navbar": {
-		"search": {
-			"placeholder": "Try searching for something"
-		}
-	}
+  "general": {
+    "tile": {
+      "aria-label": "Link to {to}",
+      "favorite": "Favorite",
+      "finished": "Finished",
+      "ongoing": "Ongoing",
+      "unfavorite": "Unfavorite"
+    }
+  },
+  "home": {
+    "banner": {
+      "add": "Add to watchlist +",
+      "watch": "Watch now"
+    },
+    "explore_more": "Start watching",
+    "no-media": "Ooops... Looks like there is nothing..."
+  },
+  "navbar": {
+    "explore": "Explore",
+    "home": "Home",
+    "my": "Saved",
+    "search": {
+      "placeholder": "Try searching for something"
+    }
+  }
 }

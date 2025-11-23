@@ -13,6 +13,7 @@ const (
 				}
 			status
 			isAdult
+			bannerImage
 			averageScore
 			coverImage {
 				large
