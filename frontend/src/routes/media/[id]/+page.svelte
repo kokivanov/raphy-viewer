@@ -36,7 +36,10 @@
 		<section class="relative pr-5" in:blur={{ duration: 300, delay: 100 }}>
 			<div class="opacity-gradient fixed max-h-56 w-full overflow-clip">
 				{#if mediaData.bannerImage}
-					<Img class="h-auto w-full" src={mediaData.bannerImage} />
+					<Img
+						class="h-auto w-full"
+						src={`/local/img?id=${mediaData.idMal}&u=${mediaData.bannerImage}`}
+					/>
 				{:else}
 					<Img class="max-h-[220px] w-full" src={nobanner} />
 				{/if}
@@ -44,7 +47,7 @@
 			<article class="relative top-60 flex">
 				<Img
 					class="relative -top-32 m-5 h-80 border-4 border-amber-500"
-					src={mediaData.coverImage.extraLarge ?? mediaData.coverImage.large}
+					src={`/local/img?id=${mediaData.idMal}&u=${mediaData.coverImage.extraLarge ?? mediaData.coverImage.large}`}
 				/>
 				<div class="mt-2">
 					<Heading tag="h1">

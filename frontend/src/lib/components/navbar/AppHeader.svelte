@@ -57,7 +57,7 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-	class="draggable unselectable sticky start-0 top-0 z-20 flex grow-0 flex-row items-center justify-between bg-white shadow-sm"
+	class="draggable unselectable sticky start-0 top-0 z-20 flex h-16 grow-0 flex-row items-center justify-between bg-white shadow-sm"
 	ondblclick={handleDoubleClick}
 >
 	<svelte-css-wrapper class="grow justify-between">
@@ -67,7 +67,11 @@
 				<Heading tag="h5" class="text-accent ml-1">Raphy Viewer</Heading>
 			</NavBrand>
 
-			<NavUl {activeUrl} activeClass="nav-active" nonActiveClass="nav-inactive" class="order-1">
+			<NavUl
+				{activeUrl}
+				classes={{ active: 'nav-active', nonActive: 'nav-inactive' }}
+				class="order-1"
+			>
 				<NavLi href="/">{$_('navbar.home')}</NavLi>
 				<NavLi href="/explore">{$_('navbar.explore')}</NavLi>
 				<NavLi href="/my">{$_('navbar.my')}</NavLi>

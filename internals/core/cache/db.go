@@ -23,16 +23,79 @@ const (
 	Select RequestType = "SELECT"
 )
 
-func (cm *CacheManager) AddMetaData(contentId, data string) {
+func (cm *CacheManager) AddMetaData(contentId int64, data string) error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
 
+	reqTime := time.Now().Unix()
+	expTime := time.Now().Add(cm.cacheLifetime).Unix()
+	var err error
+
+	dataToAdd := MetaData{
+		ID:        contentId,
+		CreatedAt: reqTime,
+		ExpiresAt: expTime,
+		Size:      len(data),
+		Data:      data,
+	}
+
+	_, err = cm.db.NewInsert().Model(&dataToAdd).Exec(cm.ctx)
+	return err
 }
 
-func (cm *CacheManager) GetMetaData() {
+func (cm *CacheManager) GetMetaData(id int64) (*MetaData, error) {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
 
+	var metaData MetaData
+
+	err := cm.db.NewSelect().Model(&metaData).Where("id = ?", id).Scan(cm.ctx)
+
+	if err == nil {
+		return &metaData, nil
+	} else {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
+		return nil, err
+	}
 }
 
-func (cm *CacheManager) RemoveMetaData() {
+func (cm *CacheManager) RemoveMetaData(id int64) error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
 
+	_, err := cm.db.NewDelete().Model((*MetaData)(nil)).Where("id = ?", id).Exec(cm.ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cm *CacheManager) RemoveMetaDatum(ids []int64) error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	_, err := cm.db.NewDelete().Model((*MetaData)(nil)).Where("hash IN (?)", bun.In(ids)).Exec(cm.ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cm *CacheManager) PurgeMetaDatum() error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	_, err := cm.db.NewDelete().Model((*MetaData)(nil)).Exec(cm.ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (cm *CacheManager) AddImageData(hash string, contentId *int64, size int64) error {
@@ -62,7 +125,7 @@ func (cm *CacheManager) GetImageData(hash string) (*ImageData, error) {
 
 	var imgData ImageData
 
-	err := cm.db.NewSelect().Model(&imgData).Where("hash = ", hash).Scan(cm.ctx)
+	err := cm.db.NewSelect().Model(&imgData).Where("hash = ?", hash).Scan(cm.ctx)
 
 	if err == nil {
 		return &imgData, nil

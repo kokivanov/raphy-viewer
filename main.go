@@ -32,7 +32,7 @@ func main() {
 	}
 
 	apiProvider := defaultApi.NewDefaultProvider()
-	apiManager, err := api.NewApiService(apiProvider, lg)
+	apiManager, err := api.NewApiService(apiProvider, lg, cacheService)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -47,6 +47,8 @@ func main() {
 		Title:     "raphyviewer",
 		Width:     1024,
 		Height:    768,
+		MinWidth:  720,
+		MinHeight: 480,
 		Frameless: true,
 		AssetServer: &assetserver.Options{
 			Assets: assets,

@@ -50,7 +50,7 @@
 							.slice(0, 5)
 							.map((media) => {
 								return {
-									src: media.bannerImage,
+									src: `/local/img?id=${media.idMal}&u=${media.bannerImage}`,
 									idMal: media.idMal,
 									title: media.title.userPreferred ?? media.title.english ?? media.title.native
 								};

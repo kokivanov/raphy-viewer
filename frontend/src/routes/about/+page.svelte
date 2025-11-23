@@ -11,7 +11,7 @@
 	</Card>
 </section>
 
-<Footer class="absolute bottom-0 mt-2">
+<Footer class="absolute bottom-0 w-full">
 	<FooterCopyright href="/" by="Koki" year={2025} />
 	<FooterLinkGroup
 		class="mt-3 flex flex-wrap items-center text-sm text-gray-500 sm:mt-0 dark:text-gray-400"
