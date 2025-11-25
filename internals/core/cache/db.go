@@ -28,7 +28,7 @@ func (cm *CacheManager) AddMetaData(contentId int64, data string) error {
 	defer cm.dbMutex.Unlock()
 
 	reqTime := time.Now().Unix()
-	expTime := time.Now().Add(cm.cacheLifetime).Unix()
+	expTime := time.Now().Add(cm.CacheLifetime).Unix()
 	var err error
 
 	dataToAdd := MetaData{
@@ -98,12 +98,205 @@ func (cm *CacheManager) PurgeMetaDatum() error {
 	return nil
 }
 
+// TODO: Assign order
+
+func (cm *CacheManager) AddRequestCache(hash string, data string) error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	reqTime := time.Now().Unix()
+	expTime := time.Now().Add(cm.RequestCacheLifetime).Unix()
+	var err error
+
+	dataToAdd := RequestCache{
+		Hash:      hash,
+		CreatedAt: reqTime,
+		ExpiresAt: expTime,
+		Data:      data,
+	}
+
+	_, err = cm.db.NewInsert().Model(&dataToAdd).Exec(cm.ctx)
+	return err
+}
+
+func (cm *CacheManager) GetRequestCache(hash string) (*RequestCache, error) {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	var metaData RequestCache
+
+	err := cm.db.NewSelect().Model(&metaData).Where("hash = ?", hash).Scan(cm.ctx)
+
+	if err == nil {
+		return &metaData, nil
+	} else {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+}
+
+func (cm *CacheManager) RemoveRequestCache(hash string) error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	_, err := cm.db.NewDelete().Model((*RequestCache)(nil)).Where("hash = ?", hash).Exec(cm.ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cm *CacheManager) RemoveRequestCaches(hashes []string) error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	_, err := cm.db.NewDelete().Model((*RequestCache)(nil)).Where("hash IN (?)", bun.In(hashes)).Exec(cm.ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cm *CacheManager) PurgeRequestCache() error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	_, err := cm.db.NewDelete().Model((*RequestCache)(nil)).Exec(cm.ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cm *CacheManager) AddShortMetaData(contentId int64, data string) error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	reqTime := time.Now().Unix()
+	expTime := time.Now().Add(cm.CacheLifetime).Unix()
+	var err error
+
+	dataToAdd := ShortMetaData{
+		ID:        contentId,
+		CreatedAt: reqTime,
+		ExpiresAt: expTime,
+		Data:      data,
+	}
+
+	_, err = cm.db.NewInsert().Model(&dataToAdd).Exec(cm.ctx)
+	return err
+}
+
+func (cm *CacheManager) AddShortMetaDatum(d []CachedShortMetaData) error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	reqTime := time.Now().Unix()
+	expTime := time.Now().Add(cm.CacheLifetime).Unix()
+	var err error
+
+	datum := make([]ShortMetaData, len(d))
+
+	for i := range datum {
+		datum[i] = ShortMetaData{
+			ID:        d[i].ID,
+			CreatedAt: reqTime,
+			ExpiresAt: expTime,
+			Data:      d[i].Data,
+		}
+	}
+
+	_, err = cm.db.NewInsert().Model(&datum).On("CONFLICT (id) DO UPDATE").Set("createdAt = EXCLUDED.createdAt, expiresAt = EXCLUDED.expiresAt").Exec(cm.ctx)
+	return err
+}
+
+func (cm *CacheManager) GetShortMetaData(id int64) (*ShortMetaData, error) {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	var metaData ShortMetaData
+
+	err := cm.db.NewSelect().Model(&metaData).Where("id = ?", id).Scan(cm.ctx)
+
+	if err == nil {
+		return &metaData, nil
+	} else {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+}
+
+func (cm *CacheManager) GetShortMetaDatum(ids []int64) (*[]ShortMetaData, error) {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	var metaData []ShortMetaData
+
+	fmt.Printf("%v", ids)
+	err := cm.db.NewSelect().Model(&metaData).Where("id IN (?)", bun.In(ids)).Scan(cm.ctx)
+
+	if err == nil {
+		return &metaData, nil
+	} else {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+}
+
+func (cm *CacheManager) RemoveShortMetaData(id int64) error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	_, err := cm.db.NewDelete().Model((*ShortMetaData)(nil)).Where("id = ?", id).Exec(cm.ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cm *CacheManager) RemoveShortMetaDatum(ids []int64) error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	_, err := cm.db.NewDelete().Model((*ShortMetaData)(nil)).Where("hash IN (?)", bun.In(ids)).Exec(cm.ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cm *CacheManager) PurgeSortMetaDatum() error {
+	cm.dbMutex.Lock()
+	defer cm.dbMutex.Unlock()
+
+	_, err := cm.db.NewDelete().Model((*ShortMetaData)(nil)).Exec(cm.ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (cm *CacheManager) AddImageData(hash string, contentId *int64, size int64) error {
 	cm.dbMutex.Lock()
 	defer cm.dbMutex.Unlock()
 
 	reqTime := time.Now().Unix()
-	expTime := time.Now().Add(cm.cacheLifetime).Unix()
+	expTime := time.Now().Add(cm.CacheLifetime).Unix()
 
 	var err error
 

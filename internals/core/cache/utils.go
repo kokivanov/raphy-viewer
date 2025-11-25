@@ -1,5 +1,11 @@
 package cache
 
+import (
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+)
+
 func elemsToDelete(data []ImageData, diff int64) ([]ImageData, []string) {
 	var (
 		sum            int64       = 0
@@ -21,4 +27,19 @@ func elemsToDelete(data []ImageData, diff int64) ([]ImageData, []string) {
 	}
 
 	return toDelete, hashesToDelete
+}
+
+func GetHash(resource string) string {
+	hash := sha256.Sum256([]byte(resource))
+	return hex.EncodeToString(hash[:])
+}
+
+func GetObjectHash(obj any) string {
+	objString, err := json.Marshal(obj)
+	if err != nil {
+		objString = []byte{}
+	}
+
+	hash := sha256.Sum256(objString)
+	return hex.EncodeToString(hash[:])
 }

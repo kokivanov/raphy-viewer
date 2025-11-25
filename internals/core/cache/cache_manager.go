@@ -24,10 +24,11 @@ type CacheManager struct {
 	imgDir     string
 	contentDir string
 
-	db                *bun.DB
-	dbMutex           sync.Mutex
-	cacheLifetime     time.Duration
-	imageCacheMaxSize int64
+	db                   *bun.DB
+	dbMutex              sync.Mutex
+	CacheLifetime        time.Duration
+	RequestCacheLifetime time.Duration
+	imageCacheMaxSize    int64
 
 	lg logger.Logger
 
@@ -68,18 +69,33 @@ func NewCacheManager(cacheDir string, lg logger.Logger) (*CacheManager, error) {
 		return nil, err
 	}
 
-	return &CacheManager{
-		db:                db,
-		dir:               cacheDir,
-		imgDir:            imgDir,
-		contentDir:        contentDir,
-		cacheLifetime:     7 * 24 * time.Hour,
-		imageCacheMaxSize: 2 * 1024 * 1024 * 1024,
+	_, err = db.NewCreateTable().Model((*ShortMetaData)(nil)).IfNotExists().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = db.NewCreateTable().Model((*RequestCache)(nil)).IfNotExists().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	cm := &CacheManager{
+		db:                   db,
+		dir:                  cacheDir,
+		imgDir:               imgDir,
+		contentDir:           contentDir,
+		RequestCacheLifetime: 60 * time.Second,
+		CacheLifetime:        7 * 24 * time.Hour,
+		imageCacheMaxSize:    2 * 1024 * 1024 * 1024,
 		Client: &http.Client{
 			Timeout: 5 * time.Second,
 		},
 		lg:      lg,
 		ctx:     ctx,
 		dbMutex: sync.Mutex{},
-	}, nil
+	}
+
+	cm.PurgeSortMetaDatum()
+
+	return cm, nil
 }

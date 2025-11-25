@@ -1,8 +1,6 @@
 package cache
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"io"
 	"net/http"
 	"os"
@@ -11,17 +9,12 @@ import (
 	"time"
 )
 
-func (cm *CacheManager) GetHash(resource string) string {
-	hash := sha256.Sum256([]byte(resource))
-	return hex.EncodeToString(hash[:])
-}
-
 func (cm *CacheManager) PathFor(uri string, contentId *string) string {
 	if contentId != nil {
 		os.MkdirAll(path.Join(cm.imgDir, *contentId), 0o775)
-		return path.Join(cm.imgDir, *contentId, cm.GetHash(uri))
+		return path.Join(cm.imgDir, *contentId, GetHash(uri))
 	} else {
-		return path.Join(cm.imgDir, "other", cm.GetHash(uri))
+		return path.Join(cm.imgDir, "other", GetHash(uri))
 	}
 }
 
@@ -48,7 +41,7 @@ func (cm *CacheManager) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		filePath = cm.PathFor(target, nil)
 	}
 
-	fileHash := cm.GetHash(target)
+	fileHash := GetHash(target)
 
 	// Try cache
 	if f, err := os.Open(filePath); err == nil {
